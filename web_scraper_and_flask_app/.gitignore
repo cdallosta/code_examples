@@ -1,6 +1,5 @@
 **/__pycache__/
 !.git*
-**/.env
 */web_scraper_venv/*
 */api_venv/*
 **/*.log
