@@ -21,7 +21,7 @@ The database is configured to use the queue_number as the primary key. As a resu
 ran once without receiving a duplicate key error from postgres
 
 ### Flask App
-The flask application function as an interfacce for the postgres database. The api can be queried by county, state,
+The flask application functions as an interfacce for the postgres database. The api can be queried by county, state,
 or county AND state. The endpoint only accepts GET request, takes in url parameters and is case insensitive.
 
 
