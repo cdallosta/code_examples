@@ -15,10 +15,6 @@ Upon download the application cleans the dataset and extracts the county and sta
 in the downloaded excel file. The application then queries the opencagedata api in order to extract the latitude
 and longitude. The pjm data and the location data is then merged and uploaded to the postgres database
 
-**NOTE:**
-
-The database is configured to use the queue_number as the primary key. As a result, this application can only be 
-ran once without receiving a duplicate key error from postgres
 
 ### Flask App
 The flask application functions as an interfacce for the postgres database. The api can be queried by county, state,

@@ -55,4 +55,4 @@ insert_to_postgres(
     Config.POSTGRES_TABLE_NAME,
     merged_df,
 )
-   
+rm_directory_file(download_path)  

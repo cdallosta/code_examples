@@ -55,7 +55,7 @@ class PostgresOperations:
                     logger.error("Unable to connect to the database")
                     return False 
 
-    def execute_many(self, dataframe,table_name:str)->None:
+    def execute_many_insert(self, dataframe,table_name:str, upsert:bool=True)->None:
         """
         Inserts and commits the given dataframe to the given table.
         Rollsback insert if error
@@ -63,21 +63,24 @@ class PostgresOperations:
         Args:
             dataframe (): the dataframe to upload
             table_name (str): the tame of the table
-
+            upsert (bool): whether to include an "ON CONFLICT" statement
         """
+
+        primary_key = list(dataframe.index.names)
+        dataframe.reset_index(drop=False,inplace=True)
         tuples = [tuple(x) for x in dataframe.to_numpy()]
-
-        cols = ",".join(list(dataframe.columns))
-
-        value_statement = str(tuple(["%%s" for x in list(dataframe.columns)])).replace("'", "")
-
+        columns = list(dataframe.columns)
+        column_stmt = ",".join(columns)
+        value_stmt = str(tuple(["%s" for x in columns])).replace("'", "")
+        query = f"INSERT INTO {table_name}({column_stmt}) VALUES {value_stmt}"
+        if upsert:
+            pk_sql_txt = ", ".join([f"{i}" for i in primary_key])
+            update_column_stmt = ",".join([f"{col} = EXCLUDED.{col}" for col in columns])
+            upsert_sql = f" ON CONFLICT ({pk_sql_txt}) DO UPDATE SET {update_column_stmt};"
+            query = query + upsert_sql
+        
         with self._connection() as conn:
             with conn.cursor() as cursor:
-                query = f"INSERT INTO %s(%s) VALUES{value_statement}" % (
-                    table_name,
-                    cols,
-                )
-
                 cursor = conn.cursor()
                 try:
                     cursor.executemany(query, tuples)
@@ -86,5 +89,5 @@ class PostgresOperations:
                 except (Exception, psycopg2.DatabaseError) as error:
                     conn.rollback()
                     logger.error(error)
-                    return 1
 
+           

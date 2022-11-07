@@ -70,7 +70,7 @@ def location_data_pull(data: pd.DataFrame, api_key: str, threads: int = 4) -> Tu
 
     county_state_df = data["county"] + "," + data["state"]
     county_state_list = list(county_state_df.dropna().unique())
-    #county_state_list = county_state_list[-3:]  # ["asdas,asda"]  #
+    
     result = []
     logger.info("Extracting location data")
     with ThreadPoolExecutor(threads) as executor:

@@ -17,4 +17,4 @@ def insert_to_postgres(host:str, port:int, user:str, password:str, database:str,
         dataframe (): Dataframe to load to postgres
     """    
     postgres = PostgresOperations(host, port, user, password, database)
-    postgres.execute_many(dataframe,table_name)
+    postgres.execute_many_insert(dataframe,table_name)
