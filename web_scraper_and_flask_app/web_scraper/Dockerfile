@@ -20,7 +20,10 @@ RUN apt-get update \
     && apt-get -y install fonts-liberation \
     && apt-get -y install xvfb \
     && apt-get install unzip \
-    && apt-get install nano
+    && apt-get install nano \
+    && apt-get install -y tzdata
+
+ENV TZ="America/Los_Angeles"
 
 WORKDIR /home/
 COPY  ./application ./application
@@ -30,8 +33,6 @@ RUN dpkg -i google-chrome-stable_current_amd64.deb
 RUN apt --fix-broken install
 RUN rm google-chrome-stable_current_amd64.deb
 
-CMD unzip chromedriver_linux64.zip
-RUN rm chromedriver_linux64.zip
 WORKDIR /home/application
 COPY ./requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir --upgrade pip
